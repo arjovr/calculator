@@ -13,7 +13,34 @@ const fmtr = new Intl.NumberFormat(navigator.language, {
     maximumSignificantDigits: 10,
     notation: "standard"
 });
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape') {
+        clear();
+        return;
+    }
+    if (e.key == 'Backspace') {
+        backspace();
+        return;
+    }
+    if (e.key == 'Enter') {
+        performOperation();
+        return;
+    }
+    if (Number(e.key) >= 0 || Number(e.key) <= '9' || e.key == '.') {
+        numberHandler(e.key);
+        return;
+    }
 
+    if ('*/+-'.includes(e.key)) {
+        const key2op = {
+            '*': '×',
+            '/': '÷',
+            '+': '+',
+            '-': '-'
+        };
+        operationHandler(key2op[e.key]);
+    }
+});
 
 
 function performOperation() {
@@ -39,12 +66,16 @@ function performOperation() {
 
 equalBtn.addEventListener('click', performOperation);
 
+function operationHandler(op) {
+    performOperation();
+    firstOperand = display.textContent;
+    enterSecondOperand = true;
+    operation = op;
+}
+
 operations.forEach(op => {
     op.addEventListener('click', e => {
-        performOperation();
-        firstOperand = display.textContent;
-        enterSecondOperand = true;
-        operation = e.target.textContent;
+        operationHandler(e.target.textContent);
     });
 });
 
@@ -52,13 +83,14 @@ let firstOperand;
 let enterSecondOperand = false;
 let operation;
 
-backspaceBtn.addEventListener('click', (e) => {
+function backspace() {
     display.textContent = display.textContent.slice(0, -1);
     if (display.textContent === '') {
         display.textContent = '0';
     }
+}
 
-});
+backspaceBtn.addEventListener('click', backspace);
 
 plusminusBtn.addEventListener('click', (e) => {
     if (display.textContent.charAt(0) == '-') {
@@ -68,26 +100,32 @@ plusminusBtn.addEventListener('click', (e) => {
     display.textContent = '-' + display.textContent;
 });
 
-acKey.addEventListener('click', (e) => {
+function clear() {
     display.textContent = '0';
     operation = null;
     firstOperand = null;
-});
+}
+
+acKey.addEventListener('click', clear);
+
+function numberHandler(key) {
+    if ((display.textContent === '0' && key !== '.') || enterSecondOperand) {
+        display.textContent = key;
+        enterSecondOperand = false;
+        return;
+    }
+    if (key === '.' && display.textContent.includes('.')) {
+        return;
+    }
+    if (display.textContent.length >= 11) {
+        return;
+    }
+    display.textContent += key;
+}
 
 numbers.forEach(number => {
     number.addEventListener('click', (e) => {
-        if ((display.textContent === '0' && e.target.textContent !== '.') || enterSecondOperand) {
-            display.textContent = e.target.textContent;
-            enterSecondOperand = false;
-            return;
-        }
-        if (e.target.textContent === '.' && display.textContent.includes('.')) {
-            return;
-        }
-        if (display.textContent.length >= 11) {
-            return;
-        }
-        display.textContent += e.target.textContent;
+        numberHandler(e.target.textContent);
     });
 })
 
