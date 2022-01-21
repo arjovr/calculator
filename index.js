@@ -2,9 +2,18 @@ const container = document.querySelector('.container');
 const numbers = document.querySelectorAll('.operator');
 const display = document.querySelector('.display');
 const acKey = document.querySelector('.ac.extra-key');
-const plusMinusKey = document.querySelector('.plus-minus.extra-key');
+const plusminusBtn = document.querySelector('.plus-minus.extra-key');
+const backspaceBtn = document.querySelector('.backspace.extra-key');
 
-plusMinusKey.addEventListener('click', (e) => {
+backspaceBtn.addEventListener('click', (e) => {
+    display.textContent = display.textContent.slice(0, -1);
+    if (display.textContent === '') {
+        display.textContent = '0';
+    }
+
+});
+
+plusminusBtn.addEventListener('click', (e) => {
     if (display.textContent.charAt(0) == '-') {
         display.textContent = display.textContent.slice(1);
         return;
@@ -31,3 +40,19 @@ numbers.forEach(number => {
         display.textContent += e.target.textContent;
     });
 })
+
+function add(x, y) {
+    return x + y;
+}
+
+function substract(x, y) {
+    return x - y;
+}
+
+function multiply(x, y) {
+    return x * y;
+}
+
+function divide(x, y) {
+    return x / y;
+}
