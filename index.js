@@ -6,22 +6,30 @@ const plusminusBtn = document.querySelector('.plus-minus.extra-key');
 const backspaceBtn = document.querySelector('.backspace.extra-key');
 const operations = document.querySelectorAll('.operation');
 const equalBtn = document.querySelector('.equal');
+const fmtr = new Intl.NumberFormat(navigator.language, {
+    style: 'decimal',
+    useGrouping: false,
+    minimumFractionDigits: 0,
+    maximumSignificantDigits: 10,
+    notation: "standard"
+});
+
 
 
 function performOperation() {
     if (firstOperand && operation) {
         switch (operation) {
             case '×':
-                display.textContent = operate(multiply, firstOperand, display.textContent);
+                display.textContent = fmtr.format(operate(multiply, firstOperand, display.textContent)).substring(0, 10);
                 break;
             case '÷':
-                display.textContent = operate(divide, firstOperand, display.textContent);
+                display.textContent = fmtr.format(operate(divide, firstOperand, display.textContent)).substring(0, 10);
                 break;
             case '+':
-                display.textContent = operate(add, firstOperand, display.textContent);
+                display.textContent = fmtr.format(operate(add, firstOperand, display.textContent)).substring(0, 10);
                 break;
             case '-':
-                display.textContent = operate(substract, firstOperand, display.textContent);
+                display.textContent = fmtr.format(operate(substract, firstOperand, display.textContent)).substring(0, 10);
                 break;
         }
         firstOperand = display.textContent;
